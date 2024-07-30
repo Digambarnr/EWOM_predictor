@@ -1,0 +1,287 @@
+<!doctype html>
+<html lang="en">
+<head xmlns="http://www.w3.org/1999/xhtml">
+  <meta charset="UTF-8">
+  <title>Read eWOM Predictor</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+          integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+          crossorigin="anonymous"></script>
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+        integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@2.0.0/dist/tf.min.js"></script>
+
+</head>
+<body> class="bg-dark">
+
+<div class="container">
+   <div class="row">
+       <div class="card mt-50" style="width: 100%; height: 100%">
+          <div class="card-header" style="text-align: center">
+             <h1>Welcome to Read eWOM Predictor</h1>
+          </div>
+          <div class="card-body">
+             <div class="col-12" style="text-align: center">
+                  <h5>This app predicts the possibility of individual will read ewom. Try filling the details below: </h5>
+             </div>
+             <br>
+             <form method="POST" accept-charset="utf-8" name="Modelform">
+                 <div class="col-md-10 form-group" style="text-align: center">
+                    <label><b>Enter Age: </b></label>
+                    <input class="form-control" type="text" id="age" name="age" placeholder="Enter no. of age">
+                 </div>
+                 <div class="col-md-10 form-group" style="text-align: center">
+                    <label><b>Select Gender: </b></label>
+                    <select class="selectpicker form-control" id="gender" name="gender" required="1">
+
+                        {% for gender in gender %}
+                        <option value="{{ gender }}">{{ gender }}</option>
+                        {% endfor %}
+                    </select>
+                 </div>
+                 <div class="col-md-10 form-group" style="text-align: center">
+                    <label><b>Select Education: </b></label>
+                    <select class="selectpicker form-control" id="education" name="education" required="1">
+                        {% for education in education %}
+                        <option value="{{ education }}">{{ education }}</option>
+                        {% endfor %}
+                    </select>
+                 </div>
+                 <div class="col-md-10 form-group" style="text-align: center">
+                    <label><b>Select Income: </b></label>
+                    <select class="selectpicker form-control" id="income" name="income" required="1">
+                        {% for income in income %}
+                        <option value="{{ income }}">{{ income }}</option>
+                        {% endfor %}
+                    </select>
+                 </div>
+                 <div class="col-md-10 form-group" style="text-align: center">
+                    <label><b>Select family_type: </b></label>
+                    <select class="selectpicker form-control" id="family_type" name="family_type" required="1">
+                        {% for family_type in family_type %}
+                        <option value="{{ family_type }}">{{ family_type }}</option>
+                        {% endfor %}
+                    </select>
+                 </div>
+                 <div class="col-10 form-group" style="text-align: center">
+                    <label><b>Select Location: </b></label>
+                    <select class="selectpicker form-control" id="location" name="location" required="1">
+                        {% for location in location %}
+                        <option value="{{ location }}">{{ location }}</option>
+                        {% endfor %}
+                    </select>
+                 </div>
+                 <div class="col-md-10 form-group" style="text-align: center">
+                    <label><b>Select Reside: </b></label>
+                    <select class="selectpicker form-control" id="reside" name="reside" required="1">
+                        {% for reside in reside %}
+                        <option value="{{ reside }}">{{ reside }}</option>
+                        {% endfor %}
+                    </select>
+                 </div>
+                 <div class="col-md-10 form-group" style="text-align: center">
+                    <label><b>Select Occupation: </b></label>
+                    <select class="selectpicker form-control" id="occupation" name="occupation" required="1">
+                        {% for occupation in occupation %}
+                        <option value="{{ occupation }}">{{ occupation }}</option>
+                        {% endfor %}
+                    </select>
+                 </div>
+                 <div class="col-md-10 form-group" style="text-align: center">
+                    <label><b>Enter number of dependent: </b></label>
+                    <input class="form-control" type="text" id="dependent" name="dependent" placeholder="Enter no. of dependent">
+                 </div>
+                 <div class="col-md-10 form-group" style="text-align: center">
+                    <label><b>Select Marital_status: </b></label>
+                    <select class="selectpicker form-control" id="marital_status" name="marital_status" required="1">
+                        {% for marital_status in marital_status %}
+                        <option value="{{ marital_status }}">{{ marital_status }}</option>
+                        {% endfor %}
+                    </select>
+                 </div>
+                 <div class="col-md-10 form-group" style="text-align: center">
+                    <label><b>Select Mother_tongue: </b></label>
+                    <select class="selectpicker form-control" id="mother_tongue" name="mother_tongue" required="1">
+                        {% for mother_tongue in mother_tongue %}
+                        <option value="{{ mother_tongue }}">{{ mother_tongue }}</option>
+                        {% endfor %}
+                    </select>
+                 </div>
+                 <div class="col-md-10 form-group" style="text-align: center">
+                    <label><b>Save_time: </b></label>
+                    <select class="selectpicker form-control" id="save_time" name="save_time" required="1">
+                        {% for save_time in save_time %}
+                        <option value="{{ save_time }}">{{ save_time }}</option>
+                        {% endfor %}
+                    </select>
+                 </div>
+                 <div class="col-md-10 form-group" style="text-align: center">
+                    <label><b>Detailed product information: </b></label>
+                    <select class="selectpicker form-control" id="detailed_product_information" name="detailed_product_information" required="1">
+                        {% for detailed_product_information in detailed_product_information %}
+                        <option value="{{ detailed_product_information }}">{{ detailed_product_information }}</option>
+                        {% endfor %}
+                    </select>
+                 </div>
+                 <div class="col-md-10 form-group" style="text-align: center">
+                    <label><b>Visual demonstrations in video reviews: </b></label>
+                    <select class="selectpicker form-control" id="visual_demonstrations_in_video_reviews" name="visual_demonstrations_in_video_reviews" required="1">
+                        {% for visual_demonstrations_in_video_reviews in visual_demonstrations_in_video_reviews %}
+                        <option value="{{ visual_demonstrations_in_video_reviews }}">{{ visual_demonstrations_in_video_reviews }}</option>
+                        {% endfor %}
+                    </select>
+                 </div>
+                 <div class="col-md-10 form-group" style="text-align: center">
+                    <label><b>Trust in reputable reviewers: </b></label>
+                    <select class="selectpicker form-control" id="trust_in_reputable_reviewers" name="trust_in_reputable_reviewers" required="1">
+                        {% for trust_in_reputable_reviewers in trust_in_reputable_reviewers %}
+                        <option value="{{ trust_in_reputable_reviewers }}">{{ trust_in_reputable_reviewers }}</option>
+                        {% endfor %}
+                    </select>
+                 </div>
+                 <div class="col-md-10 form-group" style="text-align: center">
+                    <label><b>Recommendations from like-minded individuals: </b></label>
+                    <select class="selectpicker form-control" id="recommendations_from_like-minded_individuals" name="recommendations_from_like_minded_individuals" required="1">
+                        {% for recommendations_from_like_minded_individuals in recommendations_from_like_minded_individuals %}
+                        <option value="{{ recommendations_from_like_minded_individuals }}">{{ recommendations_from_like_minded_individuals }}</option>
+                        {% endfor %}
+                    </select>
+                 </div>
+                 <div class="col-md-10 form-group" style="text-align: center">
+                    <label><b>Engaging with a community of reviewers: </b></label>
+                    <select class="selectpicker form-control" id="engaging_with_a_community_of_reviewers" name="engaging_with_a_community_of_reviewers" required="1">
+                        {% for engaging_with_a_community_of_reviewers in engaging_with_a_community_of_reviewers %}
+                        <option value="{{ engaging_with_a_community_of_reviewers }}">{{ engaging_with_a_community_of_reviewers }}</option>
+                        {% endfor %}
+                    </select>
+                 </div>
+                 <div class="col-md-10 form-group" style="text-align: center">
+                    <label><b>Availability of a wide range of information: </b></label>
+                    <select class="selectpicker form-control" id="availability_of_a_wide_range_of_information" name="availability_of_a_wide_range_of_information" required="1">
+                        {% for availability_of_a_wide_range_of_information in availability_of_a_wide_range_of_information %}
+                        <option value="{{ availability_of_a_wide_range_of_information }}">{{ availability_of_a_wide_range_of_information }}</option>
+                        {% endfor %}
+                    </select>
+                 </div>
+                 <div class="col-md-10 form-group" style="text-align: center">
+                    <label><b>Reviews are transparent and authentic: </b></label>
+                    <select class="selectpicker form-control" id="reviews_are_transparent_and_authentic" name="reviews_are_transparent_and_authentic" required="1">
+                        {% for reviews_are_transparent_and_authentic in reviews_are_transparent_and_authentic %}
+                        <option value="{{ reviews_are_transparent_and_authentic }}">{{ reviews_are_transparent_and_authentic }}</option>
+                        {% endfor %}
+                    </select>
+                 </div>
+                 <div class="col-md-10 form-group" style="text-align: center">
+                    <label><b>Assurance of customer satisfaction: </b></label>
+                    <select class="selectpicker form-control" id="assurance_of_customer_satisfaction" name="assurance_of_customer_satisfaction" required="1">
+                        {% for assurance_of_customer_satisfaction in assurance_of_customer_satisfaction %}
+                        <option value="{{ assurance_of_customer_satisfaction }}">{{ assurance_of_customer_satisfaction }}</option>
+                        {% endfor %}
+                    </select>
+                 </div>
+                 <div class="col-md-10 form-group" style="text-align: center">
+                    <label><b>Confirmation of product suitability for specific needs: </b></label>
+                    <select class="selectpicker form-control" id="confirmation_of_product_suitability_for_specific_needs" name="confirmation_of_product_suitability_for_specific_needs" required="1">
+                        {% for confirmation_of_product_suitability_for_specific_needs in confirmation_of_product_suitability_for_specific_needs %}
+                        <option value="{{ confirmation_of_product_suitability_for_specific_needs }}">{{ confirmation_of_product_suitability_for_specific_needs }}</option>
+                        {% endfor %}
+                    </select>
+                 </div>
+                 <div class="col-md-10 form-group" style="text-align: center">
+                    <label><b>Confidence in my knowledge about the product: </b></label>
+                    <select class="selectpicker form-control" id="confidence_in_my_knowledge_about_the_product" name="confidence_in_my_knowledge_about_the_product" required="1">
+                        {% for confidence_in_my_knowledge_about_the_product in confidence_in_my_knowledge_about_the_product %}
+                        <option value="{{ confidence_in_my_knowledge_about_the_product }}">{{ confidence_in_my_knowledge_about_the_product }}</option>
+                    {% endfor %}
+                    </select>
+                 </div>
+                 <div class="col-md-10 form-group" style="text-align: center">
+                    <label><b>Lack of interest in others opinion: </b></label>
+                    <select class="selectpicker form-control" id="lack_of_interest_in_others_opinion" name="lack_of_interest_in_others_opinion" required="1">
+                        {% for lack_of_interest_in_others_opinion in lack_of_interest_in_others_opinion %}
+                        <option value="{{ lack_of_interest_in_others_opinion }}">{{ lack_of_interest_in_others_opinion }}</option>
+                        {% endfor %}
+                    </select>
+                 </div>
+                 <div class="col-md-10 form-group" style="text-align: center">
+                    <label><b>Confidence in my own decision-making abilities: </b></label>
+                    <select class="selectpicker form-control" id="confidence_in_my_own_decision_making_abilities" name="confidence_in_my_own_decision_making_abilities" required="1">
+                        {% for confidence_in_my_own_decision_making_abilities in confidence_in_my_own_decision_making_abilities %}
+                        <option value="{{ confidence_in_my_own_decision_making_abilities }}">{{ confidence_in_my_own_decision_making_abilities }}</option>
+                        {% endfor %}
+                    </select>
+                 </div>
+                 <div class="col-md-10 form-group" style="text-align: center">
+                    <label><b>Prefer seek advice from experts: </b></label>
+                    <select class="selectpicker form-control" id="prefer_seek_advice_from_experts" name="prefer_seek_advice_from_experts" required="1">
+                        {% for prefer_seek_advice_from_experts in prefer_seek_advice_from_experts %}
+                        <option value="{{ prefer_seek_advice_from_experts }}">{{ prefer_seek_advice_from_experts }}</option>
+                        {% endfor %}
+                    </select>
+                 </div>
+                 <div class="col-md-10 form-group" style="text-align: center">
+                    <label><b>Review creates confusion: </b></label>
+                    <select class="selectpicker form-control" id="review_creates_confusion" name="review_creates_confusion" required="1">
+                        {% for review_creates_confusion in review_creates_confusion %}
+                        <option value="{{ review_creates_confusion }}">{{ review_creates_confusion }}</option>
+                        {% endfor %}
+                    </select>
+                 </div>
+                 <div class="col-md-10 form-group" style="text-align: center">
+                    <label><b>Difference in eWOM and product quality: </b></label>
+                    <select class="selectpicker form-control" id="difference_in_ewom_and_product_quality" name="difference_in_ewom_and_product_quality" required="1">
+                        {% for difference_in_ewom_and_product_quality in difference_in_ewom_and_product_quality %}
+                        <option value="{{ difference_in_ewom_and_product_quality }}">{{ difference_in_ewom_and_product_quality }}</option>
+                        {% endfor %}
+                    </select>
+                 </div>
+                 <div class="col-md-12" style="text-align: center">
+                    <button class="btn btn-primary form-control" onclick="send_data()">Predict reading eWOM</button>
+                 </div>
+             </form>
+             <br>
+             <div class="col-md-12" style="text-align: center">
+                 <h3><span id="prediction"></span></h3>
+             </div>
+          </div>
+       </div>
+   </div>
+</div>
+<script>
+    function form_handler(event){
+        event.preventDefault();
+    }
+    function send_data(){
+        document.querySelector('form').addEventListener("submit", form_handler);
+
+        var fd = new FormData(document.querySelector('form'));
+
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', '/predict', true);
+        document.getElementById('prediction').innerHTML="Wait! Predicting eWOM....";
+
+        xhr.onreadystatechange = function(){
+            if(xhr.readyState == XMLHttpRequest.DONE){
+                document.getElementById("prediction").innerHTML='Prediction: ' + xhr.responseText;
+            }
+        };
+        xhr.onload = function(){};
+        xhr.send(fd);
+    }
+</script>
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+      integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+      crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+      integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+      crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
+      integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
+      crossorigin="anonymous"></script>
+</body>
+</html>
